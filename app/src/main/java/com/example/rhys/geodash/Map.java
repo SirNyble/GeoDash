@@ -11,12 +11,19 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,6 +45,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
     private static final String TAG = MainActivity.class.getSimpleName();
     private LocationRequest mLocationRequest;
 
+    private TextView mLatitudeText;
+    private TextView mLongitudeText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +57,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        mLatitudeText = (TextView) findViewById(R.id.latTextView);
+        mLongitudeText = (TextView) findViewById(R.id.longTextView);
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -54,10 +67,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
                 .build();
 
         // Create the LocationRequest object
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+        mLocationRequest = new LocationRequest();//LocationRequest.create()
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(10 * 1000);      // 10 seconds, in milliseconds
+        mLocationRequest.setFastestInterval(1 * 1000); // 1 second, in milliseconds
+        
 
         final Button button = (Button) findViewById(R.id.backBtn);
         button.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +119,18 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
     @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Location services connected.");
+
+        startLocationUpdates();
+        //Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+       /* if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+        else {
+            handleNewLocation(location);
+        };*/
+    }
+
+    protected void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -115,13 +141,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (location == null) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-        else {
-            handleNewLocation(location);
-        };
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
     }
 
     @Override
@@ -145,9 +166,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
 
     private void handleNewLocation(Location location) {
         Log.d(TAG, location.toString());
-        // Add a marker in Sydney and move the camera
+        // Add a marker to current location and move the camera
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
+
+        mLatitudeText.setText(String.valueOf(currentLatitude));
+        mLongitudeText.setText(String.valueOf(currentLongitude));
+
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
         mMap.addMarker(new MarkerOptions().position(latLng).title("I am here!"));
@@ -156,6 +181,21 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.e(TAG, "UPDATING");
         handleNewLocation(location);
+        updateUI(location.getLatitude(), location.getLongitude());
     }
+
+    private void updateUI(double lat, double lon) {
+        mLatitudeText.setText(String.valueOf(lat));
+        mLongitudeText.setText(String.valueOf(lon));
+        //mLastUpdateTimeTextView.setText(mLastUpdateTime);
+    }
+
+    /*
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.e(TAG, "UPDATING");
+        handleNewLocation(location);
+    }*/
 }
