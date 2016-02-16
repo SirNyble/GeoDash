@@ -23,6 +23,13 @@
             </intent-filter>
             <service android:name=".GeofenceTransitionsIntentService"/>
         </activity>
+
+        <activity  android:name=".Map">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <service android:name=".GeofenceTransitionsIntentService"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
