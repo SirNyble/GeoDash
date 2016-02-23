@@ -21,15 +21,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="New Text"
+            android:text="0.0"
             android:id="@+id/latTextView"
             android:layout_weight="0.17" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:text="New Text"
-            android:id="@+id/longTextView" />
+            android:text="0.0"
+            android:id="@+id/longTextView"
+            android:layout_weight="0.33" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Geofence"
+            android:id="@+id/addGeofenceBtn" />
+
     </LinearLayout>
 
 

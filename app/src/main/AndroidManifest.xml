@@ -15,7 +15,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-
+        <service android:name=".GeofenceTransitionsIntentService"/>
 
         <activity android:name=".MainActivity">
 
@@ -24,15 +24,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <service android:name=".GeofenceTransitionsIntentService"/>
         </activity>
 
         <activity  android:name=".Map">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <service android:name=".GeofenceTransitionsIntentService"/>
+
             </intent-filter>
         </activity>
+
+
     </application>
 
 </manifest>
