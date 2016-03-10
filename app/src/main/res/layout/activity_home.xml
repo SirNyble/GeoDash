@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
     <TextView
         android:layout_width="wrap_content"
@@ -10,14 +11,30 @@
         android:text="GeoDash!"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="72px"
+        android:layout_weight="0.06" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="164dp"
         android:layout_height="wrap_content"
-        android:text="Get Started!"
+        android:text="Load Map"
         android:id="@+id/startBtn"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:text="Create Map"
+        android:id="@+id/button"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:text="Random Map"
+        android:id="@+id/button2"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
