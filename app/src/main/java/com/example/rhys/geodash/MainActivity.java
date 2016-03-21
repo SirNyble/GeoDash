@@ -33,6 +33,15 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
+        final Button create = (Button) findViewById(R.id.createMapBtn);
+        create.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, CreateMap.class);
+                startActivity(i);
+                finish();
+            }
+        });
+
     }
 
 

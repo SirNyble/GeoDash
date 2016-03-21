@@ -27,7 +27,7 @@
         android:layout_width="164dp"
         android:layout_height="wrap_content"
         android:text="Create Map"
-        android:id="@+id/button"
+        android:id="@+id/createMapBtn"
         android:layout_gravity="center_horizontal" />
 
     <Button
