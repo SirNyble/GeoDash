@@ -19,7 +19,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="164dp"
         android:layout_height="wrap_content"
-        android:text="Load Map"
+        android:text="Play!"
         android:id="@+id/startBtn"
         android:layout_gravity="center_horizontal" />
 

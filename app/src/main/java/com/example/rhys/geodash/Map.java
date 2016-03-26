@@ -28,6 +28,7 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -56,9 +57,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
     private LocationRequest mLocationRequest;
     //private LocationClient mLocationClient;
     private Marker mCurLocation;
-
-    private TextView mLatitudeText;
-    private TextView mLongitudeText;
+    private int mScore;
+    private TextView mScoreText;
+    //private TextView mLatitudeText;
+    //private TextView mLongitudeText;
 
     private List<Geofence> mGeofenceList;
     private PendingIntent mGeofencePendingIntent;
@@ -78,7 +80,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        mScore = 0;
         mGeofenceList = new ArrayList<Geofence>();
         mRiddleLocations = new ArrayList<RiddleLocation>();
         mGeofencePendingIntent = null;
@@ -98,9 +100,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
         riddle.put("Riddle Message", "After a long day, You'll find me lounging at...");
         cityRef.setValue(riddle);*/
 
-        mLatitudeText = (TextView) findViewById(R.id.latTextView);
-        mLongitudeText = (TextView) findViewById(R.id.longTextView);
-
+        //mLatitudeText = (TextView) findViewById(R.id.latTextView);
+        //mLongitudeText = (TextView) findViewById(R.id.longTextView);
+        mScoreText = (TextView) findViewById(R.id.scoreText);
 
         //setup google api
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -119,27 +121,27 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
 
 
 
-        final Button bckButton = (Button) findViewById(R.id.backBtn);
+        /*final Button bckButton = (Button) findViewById(R.id.backBtn);
         bckButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(Map.this, MainActivity.class);
                 startActivity(i);
                 finish();
             }
-        });
+        });*/
 
 
 
-        final Button addGeofenceButton = (Button) findViewById(R.id.addGeofenceBtn);
+        /*final Button addGeofenceButton = (Button) findViewById(R.id.addGeofenceBtn);
         addGeofenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Create Geofences
-                Log.d(TAG, mLatitudeText.toString() + mLongitudeText.toString());
+               // Log.d(TAG, mLatitudeText.toString() + mLongitudeText.toString());
                 mGeofenceList.add(new Geofence.Builder()
                         .setRequestId("0").setCircularRegion(
-                       /* Double.parseDouble(mLatitudeText.getText().toString()),
-                        Double.parseDouble(mLongitudeText.getText().toString()),*/
+                       //Double.parseDouble(mLatitudeText.getText().toString()),
+                       // Double.parseDouble(mLongitudeText.getText().toString()),
                                 45.946777, -66.676234,
                                 20
                         )
@@ -151,7 +153,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
                         .build());
                 startLocationUpdates();
             }
-        });
+        });*/
 
 
         //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=business+near+city");
@@ -255,6 +257,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
         Log.d(TAG, "MAP READY");
         mMap = googleMap;
         mCurLocation = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)).title("I am here!"));
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
+        mMap.animateCamera(zoom);
 
     }
 
@@ -341,8 +345,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
 
-        mLatitudeText.setText(String.valueOf(currentLatitude));
-        mLongitudeText.setText(String.valueOf(currentLongitude));
+        //mLatitudeText.setText(String.valueOf(currentLatitude));
+       // mLongitudeText.setText(String.valueOf(currentLongitude));
 
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
         mCurLocation.setPosition(latLng);
@@ -358,8 +362,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
     }
 
     private void updateUI(double lat, double lon) {
-        mLatitudeText.setText(String.valueOf(lat));
-        mLongitudeText.setText(String.valueOf(lon));
+        mScore++;
+        mScoreText.setText("" + mScore);
+        //mLatitudeText.setText(String.valueOf(lat));
+        //mLongitudeText.setText(String.valueOf(lon));
         //mLastUpdateTimeTextView.setText(mLastUpdateTime);
     }
 
