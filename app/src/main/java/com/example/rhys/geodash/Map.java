@@ -179,6 +179,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
                 getWindowManager().getDefaultDisplay().getSize(displaySize);
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, displaySize.x, 250, 30));
+                mRound++;
+                if(mRound >= mRiddleLocations.size())
+                {
+                    Intent i = new Intent(Map.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+                }
 
             }
         });
