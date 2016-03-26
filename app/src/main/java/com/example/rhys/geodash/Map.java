@@ -1,11 +1,14 @@
 package com.example.rhys.geodash;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -35,11 +38,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.location.Location.distanceBetween;
 
 /**
  * Created by Kelsey on 2/15/2016.
@@ -59,6 +67,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
     private Marker mCurLocation;
     private int mScore;
     private TextView mScoreText;
+    private Button mGuessButton = null;
+    private Button mRiddleButton = null;
+    private boolean mIsFirstUpdate = true;
     //private TextView mLatitudeText;
     //private TextView mLongitudeText;
 
@@ -68,6 +79,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
     private Firebase myFirebaseRef;
 
     private ArrayList<RiddleLocation> mRiddleLocations;
+    private int mRound;
 
     public Map() {
     }
@@ -81,6 +93,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mScore = 0;
+        mRound = 0;
+
         mGeofenceList = new ArrayList<Geofence>();
         mRiddleLocations = new ArrayList<RiddleLocation>();
         mGeofencePendingIntent = null;
@@ -88,7 +102,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
         // Setup Firebase
         Firebase.setAndroidContext(this);
         myFirebaseRef = new Firebase("https://burning-inferno-6101.firebaseio.com/");
-        loadRiddleLocations();
+
 
 
         //Firebase cityRef = myFirebaseRef.child("Fredericton").child("Location");
@@ -119,7 +133,56 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
         mLocationRequest.setInterval(10 * 1000);      // 10 seconds, in milliseconds
         mLocationRequest.setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
+        mRiddleButton = (Button) findViewById(R.id.riddleButton);
+        mRiddleButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String riddleMsg = mRiddleLocations.get(mRound).getRiddle();
+                String riddleTitle = mRiddleLocations.get(mRound).getName();
+                AlertDialog alertDialog = new AlertDialog.Builder(Map.this).create();
+                alertDialog.setTitle(riddleTitle);
+                alertDialog.setMessage(riddleMsg);
 
+                alertDialog.setButton("Continue..", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // here you can add functions
+                    }
+                });
+
+                alertDialog.show();
+            }
+        });
+        mRiddleButton.setEnabled(false);
+
+        mGuessButton = (Button) findViewById(R.id.guessButton);
+        mGuessButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //Get the Current location
+                double curLat = mCurLocation.getPosition().latitude;
+                double curLong = mCurLocation.getPosition().longitude;
+                //Get the Acutal location
+                double actLat = mRiddleLocations.get(mRound).getLatitude();
+                double actLong = mRiddleLocations.get(mRound).getLongitude();
+
+                float[] results = new float[1];
+                distanceBetween(curLat, curLong, actLat, actLong, results);
+                Log.d(TAG, "DISTANCE: " + results[0] + " meters");
+                Polyline line = mMap.addPolyline(new PolylineOptions()
+                        .add(new LatLng(curLat, curLong), new LatLng(actLat, actLong))
+                        .width(5)
+                        .color(Color.RED));
+
+                LatLngBounds bounds = new LatLngBounds.Builder()
+                        .include(new LatLng(curLat, curLong))
+                        .include(new LatLng(actLat, actLong)).build();
+
+                Point displaySize = new Point();
+                getWindowManager().getDefaultDisplay().getSize(displaySize);
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, displaySize.x, 250, 30));
+
+            }
+        });
+        mGuessButton.setEnabled(false);
 
         /*final Button bckButton = (Button) findViewById(R.id.backBtn);
         bckButton.setOnClickListener(new View.OnClickListener() {
@@ -186,9 +249,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
                     Log.d(TAG, "YAYY: " + curLocation.toString());
                     mRiddleLocations.add(curLocation);
                 }
-
                 Log.d(TAG, "LOCATION COUNT: " + mRiddleLocations.size());
-                createGeofences();
+                //createGeofences();
             }
 
             @Override
@@ -260,6 +322,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
         CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
         mMap.animateCamera(zoom);
 
+        loadRiddleLocations();
+
     }
 
 
@@ -285,6 +349,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
         Log.i(TAG, "Location services connected.");
 
         startLocationUpdates();
+        mRiddleButton.setEnabled(true);
+        mGuessButton.setEnabled(true);
         //Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
        /* if (location == null) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -306,7 +372,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        Log.d(TAG, "TOOO LTE");
+        //Log.d(TAG, "TOOO LTE");
         if(mGeofenceList.size() > 0)
         {
             Log.d(TAG, "ADDING GEOFENCES");
@@ -351,7 +417,12 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
         mCurLocation.setPosition(latLng);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        if(mIsFirstUpdate)
+        {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mIsFirstUpdate = false;
+        }
+
     }
 
     @Override
