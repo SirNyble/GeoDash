@@ -1,11 +1,14 @@
 package com.example.rhys.geodash;
 
+import android.app.ActionBar;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,7 +23,7 @@ import com.google.android.gms.maps.GoogleMap;
 /**
  * Created by Kelsey on 3/21/2016.
  */
-public class CreateMap extends FragmentActivity {
+public class CreateMap extends AppCompatActivity {
 
         private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
         private GoogleMap mMap;
@@ -39,6 +42,15 @@ public class CreateMap extends FragmentActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_create);
 
+            Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+            setSupportActionBar(myToolbar);
+
+            // Get a support ActionBar corresponding to this toolbar
+            android.support.v7.app.ActionBar ab = getSupportActionBar();
+
+            // Enable the Up button
+            ab.setDisplayHomeAsUpEnabled(true);
+
             dbHelper = new DBHelper(this);
 
             holderList = (ListView) findViewById(R.id.holder);
@@ -50,15 +62,8 @@ public class CreateMap extends FragmentActivity {
                 }
             });
 
-            backBtn = (Button) findViewById(R.id.backBtn);
-            backBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(CreateMap.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            });
+
+
 
         }
 
