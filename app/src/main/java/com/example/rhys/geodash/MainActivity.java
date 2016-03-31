@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         final Button button = (Button) findViewById(R.id.startBtn);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, Map.class);
+                Intent i = new Intent(MainActivity.this, LoadMap.class);
                 startActivity(i);
             }
         });

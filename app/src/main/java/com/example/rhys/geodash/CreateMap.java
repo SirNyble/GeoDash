@@ -58,7 +58,6 @@ public class CreateMap extends AppCompatActivity {
             contBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    addItems();
                 }
             });
 
@@ -80,42 +79,6 @@ public class CreateMap extends AppCompatActivity {
         }
 
 
-       private void addItems()
-       {
-           EditText name = (EditText) findViewById(R.id.nameField);
-           EditText city = (EditText) findViewById(R.id.cityField);
-           EditText time = (EditText) findViewById(R.id.timeLimitField);
-           CheckBox isPrivate = (CheckBox) findViewById(R.id.isPrivateBox);
-           int hold = 0;
-           if(isPrivate.isChecked()) hold = 1;
-           SQLiteDatabase db = dbHelper.getWritableDatabase();
-           ContentValues values = new ContentValues();
-           values.put(DBHelper.NAME, name.getText().toString());
-           values.put(DBHelper.CITY, city.getText().toString());
-           values.put(DBHelper.TIMELIMIT, time.getText().toString());
-           values.put(DBHelper.PRIVATE, hold);
-           db.insert(
-                   DBHelper.TABLE_NAME,
-                   null,
-                   values);
-
-           display();
-       }
-
-        private void display()
-        {
-            SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.query(DBHelper.TABLE_NAME,
-                    DBHelper.COLUMNS, null, new String[] {}, null, null, null);
-            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-                    CreateMap.this,
-                    R.layout.content_layout,
-                    c,
-                    ITEM_NUM_COLS,
-                    new int[] { R.id.name, R.id.city, R.id.time, R.id.isprivate},
-                    0);
-            holderList.setAdapter(adapter);
-        }
 
 
 }

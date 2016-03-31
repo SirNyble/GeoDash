@@ -28,13 +28,20 @@
         </activity>
         <activity android:name=".Map"
             android:label="MAP"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".LoadMap">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".LoadMap" />
         </activity>
         <activity android:name=".CreateMap"
             android:label="CREATE MAP"
+            android:parentActivityName="com.example.rhys.geodash.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.rhys.geodash.MainActivity" />
+        </activity>
+        <activity android:name=".LoadMap"
+            android:label="LOAD MAP"
             android:parentActivityName="com.example.rhys.geodash.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
