@@ -74,7 +74,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
     private Button mGuessButton = null;
     private Button mRiddleButton = null;
     private boolean mIsFirstUpdate = true;
-    //private TextView mLatitudeText;
     //private TextView mLongitudeText;
 
     private List<Geofence> mGeofenceList;
@@ -177,8 +176,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 double actLat = mRiddleLocations.get(mRound).getLatitude();
                 double actLong = mRiddleLocations.get(mRound).getLongitude();
 
+
                 float[] results = new float[1];
                 distanceBetween(curLat, curLong, actLat, actLong, results);
+                mScore += (int)(1000 - results[0]);
                 Log.d(TAG, "DISTANCE: " + results[0] + " meters");
                 Polyline line = mMap.addPolyline(new PolylineOptions()
                         .add(new LatLng(curLat, curLong), new LatLng(actLat, actLong))
@@ -193,14 +194,34 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 getWindowManager().getDefaultDisplay().getSize(displaySize);
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, displaySize.x, 250, 30));
-
+                String scoreTxt = "" + mScore;
+                mScoreText.setText(scoreTxt);
 
                 mRound++;
                 if(mRound >= mRiddleLocations.size())
                 {
-                    Intent i = new Intent(Map.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
+                    AlertDialog alertDialog = new AlertDialog.Builder(Map.this).create();
+                    alertDialog.setTitle("Game Done");
+                    alertDialog.setMessage("Score: " + mScore);
+
+                    alertDialog.setButton("Add Highscore", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    alertDialog.setButton("Home", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Intent i = new Intent(Map.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    });
+
+                    alertDialog.show();
+
+
+
                 }
 
             }
