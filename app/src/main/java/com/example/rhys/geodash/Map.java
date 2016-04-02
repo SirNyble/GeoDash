@@ -193,6 +193,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 getWindowManager().getDefaultDisplay().getSize(displaySize);
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, displaySize.x, 250, 30));
+
+
                 mRound++;
                 if(mRound >= mRiddleLocations.size())
                 {
@@ -266,7 +268,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                     curLocation.setName(riddleLocations.child("Name").getValue().toString());
                     curLocation.setRiddle(riddleLocations.child("Riddle").getValue().toString());
                     curLocation.setLatitude(Double.parseDouble(riddleLocations.child("Latitude").getValue().toString()));
-                    curLocation.setmLongitude(Double.parseDouble(riddleLocations.child("Longitude").getValue().toString()));
+                    curLocation.setLongitude(Double.parseDouble(riddleLocations.child("Longitude").getValue().toString()));
                     Log.d(TAG, "YAYY: " + curLocation.toString());
                     mRiddleLocations.add(curLocation);
                 }
@@ -441,6 +443,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         if(mIsFirstUpdate)
         {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
+            mMap.animateCamera(zoom);
             mIsFirstUpdate = false;
         }
 
@@ -454,7 +458,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     private void updateUI(double lat, double lon) {
-        mScore++;
+        //mScore++;
         mScoreText.setText("" + mScore);
         //mLatitudeText.setText(String.valueOf(lat));
         //mLongitudeText.setText(String.valueOf(lon));

@@ -2,11 +2,18 @@
 <resources>
 
 
-
+    <!--<style name="Base.AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
     <style name="MainTheme" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="android:colorBackground">@color/background_holo_light</item>
         <item name="android:textColorPrimary">@color/primary_text_holo_light</item>
         <item name="android:textColorSecondary">@color/secondary_text_holo_light</item>
         <item name="windowActionBar">false</item>
-    </style>
+    </style>-->
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+
+    <item name="colorPrimary">#673AB7</item>
+    <item name="colorPrimaryDark">#512DA8</item>
+    <item name="colorAccent">#00BCD4</item>
+
+</style>
 </resources>

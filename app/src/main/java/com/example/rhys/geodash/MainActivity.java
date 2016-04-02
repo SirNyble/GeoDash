@@ -43,6 +43,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final Button random = (Button) findViewById(R.id.randomBtn);
+        random.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, Map.class);
+                startActivity(i);
+            }
+        });
+
     }
 
 

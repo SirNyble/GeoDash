@@ -40,6 +40,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.rhys.geodash.MainActivity" />
         </activity>
+        <activity android:name=".CreateMapCont"
+            android:label="CREATE MAP CONTINUED"
+            android:parentActivityName="com.example.rhys.geodash.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.rhys.geodash.MainActivity" />
+        </activity>
         <activity android:name=".LoadMap"
             android:label="LOAD MAP"
             android:parentActivityName="com.example.rhys.geodash.MainActivity">
