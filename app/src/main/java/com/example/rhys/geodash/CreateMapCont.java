@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -56,6 +57,9 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
     private Marker mCurLocation;
 
     private MapModel mModel;
+
+    private Firebase myFirebaseRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +85,11 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
         mIsFirstUpdate = true;
         mCurrentRiddle = 0;
 
+        // Setup Firebase
+        Firebase.setAndroidContext(this);
+        myFirebaseRef = new Firebase("https://burning-inferno-6101.firebaseio.com/");
+
+        //Setup textViews and EditViews
         mNumRiddleText = (TextView) findViewById(R.id.numRiddleText);
         mRiddleEdit = ((EditText)findViewById(R.id.riddleText));
         mRiddleEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -125,9 +134,29 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
                 //Check if done adding riddles
                 if(mCurrentRiddle == mNumRiddles)
                 {
-                    Log.d("DONE", "Finished adding riddles NOw add to firebase");
-                    Toast toast1 = Toast.makeText(context, "DONE! NOW ADD TO FIREBASE", duration);
-                    toast1.show();
+
+                    Firebase mapRef = myFirebaseRef.child("Maps").child(mModel.getMapName());
+                    mapRef.setValue(mModel);
+
+                   // Log.d("DONE", "Finished adding riddles NOw add to firebase");
+                   // Toast toast1 = Toast.makeText(context, "Successfully Added Map!", duration);
+                   // toast1.show();
+                    Log.d("BLH", "AHL");
+                    Intent i = new Intent(CreateMapCont.this, MainActivity.class);
+                    startActivity(i);
+                    Log.d("BLH", "AHL2");
+                    //Firebase alanRef = ref.child("users").child("alanisawesome");
+                    //User alan = new User("Alan Turing", 1912);
+                    //alanRef.setValue(alan);
+                    //Firebase cityRef = myFirebaseRef.child("Fredericton").child("Location");
+
+                    /*HashMap<String, Object> riddle = new HashMap<String, Object>();
+                    riddle.put("Latitude", "45.946777");
+                    riddle.put("Longitude","-66.676234");
+                    riddle.put("Riddle Name", "Home");
+                    riddle.put("Riddle Message", "After a long day, You'll find me lounging at...");
+                    cityRef.setValue(riddle);*/
+
                 }
                 else
                 {

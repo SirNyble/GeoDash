@@ -6,37 +6,45 @@ import java.util.ArrayList;
  * Created by rhys on 02/04/16.
  */
 public class MapModel {
-    private ArrayList<RiddleLocation> mRiddleLocation;
-    private String mMapName;
-    private int mTimeLimit;
-    private int mNumRiddles;
+    private ArrayList<RiddleLocation> riddleLocation;
+    private String mapName;
+    private int timeLimit;
+    private int numRiddles;
 
-    public MapModel(String name, int timeLimit, int numRiddles)
+    public MapModel(String name, int timeLimitIn, int numRiddlesIn)
     {
-        mMapName = name;
-        mTimeLimit = timeLimit;
-        mNumRiddles = numRiddles;
+        mapName = name;
+        timeLimit = timeLimitIn;
+        numRiddles = numRiddlesIn;
 
-        mRiddleLocation = new ArrayList<RiddleLocation>();
+        riddleLocation = new ArrayList<RiddleLocation>();
+    }
+
+    public MapModel(String name, int timeLimitIn, int numRiddlesIn,ArrayList<RiddleLocation> riddleLocationIn )
+    {
+        mapName = name;
+        timeLimit = timeLimit;
+        numRiddles = numRiddles;
+        riddleLocation = riddleLocationIn;
     }
 
     public ArrayList<RiddleLocation> getRiddleLocation()
     {
-        return mRiddleLocation;
+        return riddleLocation;
     }
 
     public String getMapName()
     {
-        return mMapName;
+        return mapName;
     }
 
-    public int getmTimeLimit()
+    public int getTimeLimit()
     {
-        return mTimeLimit;
+        return timeLimit;
     }
 
     public int getNumRiddles()
     {
-        return mNumRiddles;
+        return numRiddles;
     }
 }

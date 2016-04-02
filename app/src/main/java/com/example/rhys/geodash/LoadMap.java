@@ -133,7 +133,7 @@ public class LoadMap extends AppCompatActivity {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, MapDetail.class);
                     intent.putExtra(MapDetail.NAME, entry.getMapName());
-                    intent.putExtra(MapDetail.TIME, entry.getmTimeLimit());
+                    intent.putExtra(MapDetail.TIME, entry.getTimeLimit());
                     intent.putExtra(MapDetail.NUMRIDDLES, entry.getNumRiddles());
                     context.startActivity(intent);
                 }
@@ -154,15 +154,16 @@ public class LoadMap extends AppCompatActivity {
         protected ArrayList<MapModel> doInBackground(Void... params) {
             // TODO Use DataModel to load the data from the JSON assets file
             // and return the ArrayList of DictionaryEntrys
-            DataModel model = new DataModel(getApplicationContext());
-            entryList = model.getEntries();
+            //DataModel model = new DataModel(getApplicationContext());
+            // recycler view correct?entryList = model.getEntries();
 
             return entryList;
         }
 
         protected void onPostExecute(ArrayList<MapModel> result) {
             // TODO Use result to set the adapter for the RecyclerView in MainActivity
-            RecyclerView.Adapter mAdapter = new MyAdapter(result);
+            ArrayList<MapModel> temp = new ArrayList<MapModel>();
+            RecyclerView.Adapter mAdapter = new MyAdapter(temp);
             mRecyclerView.setAdapter(mAdapter);
 
 
