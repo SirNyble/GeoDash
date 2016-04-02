@@ -1,29 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:paddingTop="50px">
+    android:background="@drawable/city">
 
-    <Button
-        android:layout_width="164dp"
-        android:layout_height="120dp"
-        android:text="Play!"
-        android:id="@+id/startBtn"
-        android:layout_gravity="center_horizontal" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar"
+        android:elevation="4dp"
+        android:titleTextColor="#FFFFFF"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <Button
-        android:layout_width="164dp"
-        android:layout_height="120dp"
-        android:text="Create Map"
-        android:id="@+id/createMapBtn"
-        android:layout_gravity="center_horizontal" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="15dp">
 
-    <Button
-        android:layout_width="164dp"
-        android:layout_height="120dp"
-        android:text="Random Map"
-        android:id="@+id/button2"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="164dp"
+            android:layout_height="120dp"
+            android:text="Play!"
+            android:id="@+id/startBtn"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@mipmap/start"/>
+
+        <Button
+            android:layout_width="164dp"
+            android:layout_height="120dp"
+            android:text="Create Map"
+            android:id="@+id/createMapBtn"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@mipmap/create"/>
+
+        <Button
+            android:layout_width="164dp"
+            android:layout_height="120dp"
+            android:text="Random Map"
+            android:id="@+id/button2"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@mipmap/play"/>
+    </LinearLayout>
 
 </LinearLayout>
