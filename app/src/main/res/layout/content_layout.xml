@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="true">
+    android:orientation="vertical"
+    tools:context="mobiledev.unb.ca.labexam.DetailActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <TextView
         android:id="@+id/name"
@@ -12,19 +23,9 @@
         android:layout_margin="@dimen/activity_vertical_margin"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_toStartOf="@+id/city"
-        android:layout_toLeftOf="@+id/city"/>
+        android:layout_toStartOf="@+id/time"
+        android:layout_toLeftOf="@+id/time"/>
 
-    <TextView
-    android:id="@+id/city"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/activity_vertical_margin"
-    android:textAppearance="?attr/textAppearanceListItem"
-    android:layout_alignParentTop="true"
-    android:layout_toStartOf="@+id/time"
-    android:layout_toLeftOf="@+id/time">
-</TextView>
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
@@ -32,11 +33,11 @@
         android:layout_margin="@dimen/activity_vertical_margin"
         android:textAppearance="?attr/textAppearanceListItem"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/isprivate"
-        android:layout_toLeftOf="@+id/isprivate">
+        android:layout_toStartOf="@+id/numRiddles"
+        android:layout_toLeftOf="@+id/numRiddles">
     </TextView>
     <TextView
-        android:id="@+id/isprivate"
+        android:id="@+id/numRiddles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_vertical_margin"
@@ -45,4 +46,4 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true">
     </TextView>
-</RelativeLayout>
+</LinearLayout>

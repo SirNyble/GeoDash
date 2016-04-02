@@ -68,8 +68,8 @@ public class LoadMap extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
-       // LoadDataTask task = new LoadDataTask();
-       // task.execute();
+        LoadDataTask task = new LoadDataTask();
+        task.execute();
 
     }
 
@@ -86,12 +86,11 @@ public class LoadMap extends AppCompatActivity {
     }
 
     //TODO - Complete the RecyclerView Adapter
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+        private ArrayList<MapModel> set;
 
-   /** public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        private ArrayList<DictionaryEntry> mDataset;
-
-        public MyAdapter(ArrayList<DictionaryEntry> myDataset) {
-            mDataset = myDataset;
+        public MyAdapter(ArrayList<MapModel> dataset) {
+            set = dataset;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -108,7 +107,7 @@ public class LoadMap extends AppCompatActivity {
         public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                        int viewType) {
             TextView v = (TextView) LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_layout, parent, false);
+                    .inflate(R.layout.map_layout, parent, false);
             return new ViewHolder(v);
         }
 
@@ -116,12 +115,12 @@ public class LoadMap extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             // TODO Get the DictionaryEntry at index position in mDataSet
             // You might need to declare this variable as final.
-            final DictionaryEntry entry = mDataset.get(position);
+            final MapModel entry = set.get(position);
 
 
             // TODO Set the TextView in the ViewHolder (holder) to be the
             // word in this DictionaryEntry
-            holder.mTextView.setText(entry.getWord());
+            holder.mTextView.setText(entry.getMapName());
 
             // TODO Set the onClickListener for the TextView in the ViewHolder (holder) such
             // that when it is clicked, it creates an explicit intent to launch DetailActivity
@@ -132,9 +131,10 @@ public class LoadMap extends AppCompatActivity {
                 @Override
                 public void onClick(View v){
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra(DetailActivity.WORD, entry.getWord());
-                    intent.putExtra(DetailActivity.DEFINITION, entry.getDefinition());
+                    Intent intent = new Intent(context, MapDetail.class);
+                    intent.putExtra(MapDetail.NAME, entry.getMapName());
+                    intent.putExtra(MapDetail.TIME, entry.getmTimeLimit());
+                    intent.putExtra(MapDetail.NUMRIDDLES, entry.getNumRiddles());
                     context.startActivity(intent);
                 }
             });
@@ -144,30 +144,30 @@ public class LoadMap extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return mDataset.size();
+            return set.size();
         }
     }
 
-    public class LoadDataTask extends AsyncTask<Void, Void, ArrayList<Map>> {
-        private ArrayList<Map> entryList;
+    public class LoadDataTask extends AsyncTask<Void, Void, ArrayList<MapModel>> {
+        private ArrayList<MapModel> entryList;
 
-        protected ArrayList<Map> doInBackground(Void... params) {
+        protected ArrayList<MapModel> doInBackground(Void... params) {
             // TODO Use DataModel to load the data from the JSON assets file
             // and return the ArrayList of DictionaryEntrys
-            //DataModel model = new DataModel(getApplicationContext());
-            //entryList = model.getEntries();
+            DataModel model = new DataModel(getApplicationContext());
+            entryList = model.getEntries();
 
             return entryList;
         }
 
-        protected void onPostExecute(ArrayList<Map> result) {
+        protected void onPostExecute(ArrayList<MapModel> result) {
             // TODO Use result to set the adapter for the RecyclerView in MainActivity
             RecyclerView.Adapter mAdapter = new MyAdapter(result);
             mRecyclerView.setAdapter(mAdapter);
 
 
         }
-    }**/
+    }
 
 
 }
