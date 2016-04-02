@@ -68,8 +68,8 @@ public class LoadMap extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        LoadDataTask task = new LoadDataTask();
-        task.execute();
+        //LoadDataTask task = new LoadDataTask();
+       // task.execute();
 
     }
 
@@ -87,7 +87,7 @@ public class LoadMap extends AppCompatActivity {
 
     //TODO - Complete the RecyclerView Adapter
 
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    /*public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private ArrayList<DictionaryEntry> mDataset;
 
         public MyAdapter(ArrayList<DictionaryEntry> myDataset) {
@@ -167,7 +167,7 @@ public class LoadMap extends AppCompatActivity {
 
 
         }
-    }
+    }*/
 
 
 }

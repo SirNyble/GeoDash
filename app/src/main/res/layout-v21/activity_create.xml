@@ -87,7 +87,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/nameField"
                         android:layout_column="20"
-                        android:minWidth="300px" />
+                        android:minWidth="300px"
+                        android:imeOptions="actionDone"/>
                 </TableRow>
 
                 <TableRow
@@ -115,7 +116,8 @@
                         android:id="@+id/timeLimitField"
                         android:layout_column="20"
                         android:minWidth="100px"
-                        android:layout_gravity="bottom" />
+                        android:layout_gravity="bottom"
+                        android:imeOptions="actionDone"/>
                 </TableRow>
 
                 <TableRow
@@ -162,9 +164,10 @@
                         android:layout_height="wrap_content"
                         android:inputType="number"
                         android:ems="10"
-                        android:id="@+id/editText"
+                        android:id="@+id/numRiddlesField"
                         android:layout_column="20"
-                        android:layout_gravity="bottom" />
+                        android:layout_gravity="bottom"
+                        android:imeOptions="actionDone"/>
 
                 </TableRow>
 

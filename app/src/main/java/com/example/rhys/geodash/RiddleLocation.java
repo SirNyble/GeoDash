@@ -26,7 +26,7 @@ public class RiddleLocation {
     {
         return mLongitude;
     }
-    public void setmLongitude(double val)
+    public void setLongitude(double val)
     {
         mLongitude = val;
     }
