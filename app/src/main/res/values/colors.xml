@@ -22,4 +22,5 @@
     <color name="primary_text_holo_light">#212121</color>
     <color name="secondary_text_holo_light">#727272</color>
     <color name="toolbar">#6B101B</color>
+    <color name="toolText">#FFFFFF</color>
 </resources>

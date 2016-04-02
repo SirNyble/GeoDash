@@ -8,4 +8,12 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="ToolBarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/toolText</item>
+        <item name="android:textColorSecondary">@color/toolText</item>
+        <item name="actionMenuTextColor">@color/toolText</item>
+        <item name="actionOverflowButtonStyle">@color/toolText</item>
+        <item name="drawerArrowStyle">@color/toolText</item>
+    </style>
+
 </resources>
