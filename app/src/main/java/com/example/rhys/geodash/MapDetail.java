@@ -1,9 +1,12 @@
 package com.example.rhys.geodash;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -14,10 +17,14 @@ public class MapDetail extends AppCompatActivity {
     public static final String NAME = "name";
     public static final String TIME = "time";
     public static final String NUMRIDDLES = "NUMRIDDLES";
+    public static final String POSITION = "POSITION";
 
     private String mMapName = "";
     private int mNumRiddles = 0;
     private int mTimeLimit = 0;
+    private int mPos = 0;
+
+    private Button mPlayBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,7 @@ public class MapDetail extends AppCompatActivity {
             mMapName =(String) bundleExtras.get(NAME);
             mNumRiddles = (int) bundleExtras.get(NUMRIDDLES);
             mTimeLimit = (int) bundleExtras.get(TIME);
+            mPos = (int) bundleExtras.get(POSITION);
         }
 
         TextView defT = (TextView) findViewById(R.id.time);
@@ -38,6 +46,16 @@ public class MapDetail extends AppCompatActivity {
 
         TextView rid = (TextView) findViewById(R.id.numRiddles);
         rid.setText(mNumRiddles + " riddles");
+
+        mPlayBtn = (Button) findViewById(R.id.playBtn);
+        mPlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MapDetail.this, Map.class);
+                i.putExtra(MapDetail.POSITION, mPos);
+                startActivity(i);
+            }
+        });
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);

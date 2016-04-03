@@ -61,7 +61,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
         ResultCallback {
-
+    private int mMapId;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -74,6 +74,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
     private Button mGuessButton = null;
     private Button mRiddleButton = null;
     private boolean mIsFirstUpdate = true;
+
     //private TextView mLongitudeText;
 
     private List<Geofence> mGeofenceList;
@@ -91,6 +92,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bundle bundleExtras = getIntent().getExtras();
+
+        if(bundleExtras != null)
+        {
+            mMapId = (int) bundleExtras.get("POSITION");
+        }
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -267,8 +275,39 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         //startActivity(intent);
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&types=food&name=cruise&key=YOUR_API_KEY
     }
-    //Todo: add Circle to map
+
     private void loadRiddleLocations()
+    {
+        String locations = "";
+        myFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // do some stuff once
+                Log.d(TAG, "CHILDREN COUNT: " + snapshot.child("Maps").child(Integer.toString(mMapId)).child("riddleLocation").getChildrenCount());
+                int locationCount = (int) snapshot.child("Maps").child(Integer.toString(mMapId)).child("riddleLocation").getChildrenCount();
+                for (int i = 0; i < locationCount; i++) {
+                    RiddleLocation curLocation = new RiddleLocation();
+                    DataSnapshot riddleLocations = snapshot.child("Maps").child(Integer.toString(mMapId)).child("riddleLocation").child(Integer.toString(i));
+                    Log.d(TAG, riddleLocations.toString());
+                    curLocation.setName(snapshot.child("Maps").child(Integer.toString(mMapId)).child("mapName").getValue().toString());
+                    curLocation.setRiddle(riddleLocations.child("riddle").getValue().toString());
+                    curLocation.setLatitude(Double.parseDouble(riddleLocations.child("latitude").getValue().toString()));
+                    curLocation.setLongitude(Double.parseDouble(riddleLocations.child("longitude").getValue().toString()));
+                    Log.d(TAG, "YAYY: " + curLocation.toString());
+                    mRiddleLocations.add(curLocation);
+                }
+                Log.d(TAG, "LOCATION COUNT: " + mRiddleLocations.size());
+                //createGeofences();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+    }
+
+
+    /*private void loadRiddleLocations()
     {
         //Query queryRef = myFirebaseRef.orderByKey();
         String locations = "";
@@ -301,7 +340,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
-    }
+    }*/
 
     private void createGeofences()
     {

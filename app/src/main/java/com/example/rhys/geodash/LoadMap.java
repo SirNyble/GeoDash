@@ -142,7 +142,7 @@ public class LoadMap extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
             // TODO Get the DictionaryEntry at index position in mDataSet
             // You might need to declare this variable as final.
             final MapModel entry = set.get(position);
@@ -160,11 +160,13 @@ public class LoadMap extends AppCompatActivity {
             holder.mTextView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
+                    final int pos = position;
                     Context context = v.getContext();
                     Intent intent = new Intent(context, MapDetail.class);
                     intent.putExtra(MapDetail.NAME, entry.getMapName());
                     intent.putExtra(MapDetail.TIME, entry.getTimeLimit());
                     intent.putExtra(MapDetail.NUMRIDDLES, entry.getNumRiddles());
+                    intent.putExtra(MapDetail.POSITION, pos);
                     context.startActivity(intent);
                 }
             });
