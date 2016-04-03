@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatCallback;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -187,23 +188,50 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 mRound++;
                 if(mRound >= mRiddleLocations.size())
                 {
-                    AlertDialog alertDialog = new AlertDialog.Builder(Map.this).create();
-                    alertDialog.setTitle("Game Done");
-                    alertDialog.setMessage("Score: " + mScore);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
+                    builder.setTitle("Game Done")
+                            .setMessage("Score: " + mScore);
+                    builder.setPositiveButton("Add Highscore", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(Map.this);
+                            builder2.setTitle("Add Highscore")
+                                    .setMessage("Score: " + mScore + "\n" + "Name:");
+                            // Get the layout inflater
+                            LayoutInflater inflater = Map.this.getLayoutInflater();
 
-                    alertDialog.setButton("Add Highscore", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                            // Inflate and set the layout for the dialog
+                            // Pass null as the parent view because its going in the dialog layout
+                            builder2.setView(inflater.inflate(R.layout.high_score, null))
+                                    // Add action buttons
+                                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // sign in the user ...
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Intent i = new Intent(Map.this, MainActivity.class);
+                                            startActivity(i);
+                                            finish();
+                                        }
+                                    });
+                            AlertDialog alertDialog2 = builder2.create();
+
+                            alertDialog2.show();
+                        }
+                    });
+                    builder.setNegativeButton("Home", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                                Intent i = new Intent(Map.this, MainActivity.class);
+                                startActivity(i);
+                                finish();
 
                         }
                     });
-                    alertDialog.setButton("Home", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
 
-                            Intent i = new Intent(Map.this, MainActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    });
+                    AlertDialog alertDialog = builder.create();
 
                     alertDialog.show();
 
