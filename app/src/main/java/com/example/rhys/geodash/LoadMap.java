@@ -74,17 +74,9 @@ public class LoadMap extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 // do some stuff once
-
-                Log.d("Blah", "SNAPSHOT: " + snapshot.child("Maps").getValue());
-
-                //String riddleLocations = snapshot.child("Fredericton").child("Location").getValue().toString();
-                Log.d("Blah", "CHILDREN COUNT: " + snapshot.child("Maps").getChildrenCount());
-                //myFirebaseRef.child("Maps").child(mModel.getMapName());
                 int mapCount = (int) snapshot.child("Maps").getChildrenCount();
                 for (int i = 0; i < mapCount; i++) {
-                    //Log.d("important", postSnapshot.toString());
                     MapModel post = snapshot.child("Maps").child("" + i).getValue(MapModel.class);
-                    Log.d("Blah", "MUAHA" + post.toString());
                     mModel.add(post);
                 }
                 LoadDataTask task = new LoadDataTask();
@@ -203,14 +195,15 @@ public class LoadMap extends AppCompatActivity {
         @Override
         protected ArrayList<MapModel> doInBackground(ArrayList<MapModel>... params) {
             mapList = params[0];
+            for(int i = 0; i < params.length; i++)
+                Log.d("PARAMS", params[i].toString());
+            Log.d("MAYBE", mapList.toString() );
             return mapList;
         }
 
         protected void onPostExecute(ArrayList<MapModel> result) {
             // TODO Use result to set the adapter for the RecyclerView in MainActivity
             Log.d("HELP", result.toString());
-            result.toString();
-            ArrayList<MapModel> temp = new ArrayList<MapModel>();
             RecyclerView.Adapter mAdapter = new MyAdapter(result);
             mRecyclerView.setAdapter(mAdapter);
 
