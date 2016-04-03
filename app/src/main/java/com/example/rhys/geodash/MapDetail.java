@@ -53,6 +53,7 @@ public class MapDetail extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(MapDetail.this, Map.class);
                 i.putExtra(MapDetail.POSITION, mPos);
+                i.putExtra("timeLimit", mTimeLimit);
                 startActivity(i);
             }
         });

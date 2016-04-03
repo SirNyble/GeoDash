@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
@@ -49,8 +50,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.location.Location.distanceBetween;
 
@@ -81,6 +86,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
     private ArrayList<RiddleLocation> mRiddleLocations;
     private int mRound;
 
+    public int mMapSeconds = 60;
+    public int mMapMinutes = 10;
+    private TextView mTimeLeftView;
+
     public Map() {
     }
 
@@ -94,6 +103,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         if(bundleExtras != null)
         {
             mMapId = (int) bundleExtras.get("POSITION");
+            mMapMinutes = (int) bundleExtras.get("timeLimit");
         }
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -118,6 +128,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         myFirebaseRef = new Firebase("https://burning-inferno-6101.firebaseio.com/");
 
         mScoreText = (TextView) findViewById(R.id.scoreText);
+        mTimeLeftView = (TextView) findViewById( R.id.timeView );
 
         //setup google api
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -178,53 +189,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 mRound++;
                 if(mRound >= mRiddleLocations.size())
                 {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
-                    builder.setTitle("Game Done")
-                            .setMessage("Score: " + mScore);
-                    builder.setPositiveButton("Add Highscore", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            AlertDialog.Builder builder2 = new AlertDialog.Builder(Map.this);
-                            builder2.setTitle("Add Highscore")
-                                    .setMessage("Score: " + mScore + "\n" + "Name:");
-                            // Get the layout inflater
-                            LayoutInflater inflater = Map.this.getLayoutInflater();
-
-                            // Inflate and set the layout for the dialog
-                            // Pass null as the parent view because its going in the dialog layout
-                            builder2.setView(inflater.inflate(R.layout.high_score, null))
-                                    // Add action buttons
-                                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            // sign in the user ...
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Intent i = new Intent(Map.this, MainActivity.class);
-                                            startActivity(i);
-                                            finish();
-                                        }
-                                    });
-                            AlertDialog alertDialog2 = builder2.create();
-
-                            alertDialog2.show();
-                        }
-                    });
-                    builder.setNegativeButton("Home", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-                            Intent i = new Intent(Map.this, MainActivity.class);
-                            startActivity(i);
-                            finish();
-
-                        }
-                    });
-
-                    AlertDialog alertDialog = builder.create();
-
-                    alertDialog.show();
-
+                    showGameFinishAlert();
 
 
                 }
@@ -236,6 +201,60 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
         mGuessButton.setEnabled(false);
+
+
+
+    }
+
+    public void showGameFinishAlert()
+    {
+        mGuessButton.setEnabled(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
+        builder.setTitle("Game Done")
+                .setMessage("Score: " + mScore);
+        builder.setPositiveButton("Add Highscore", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(Map.this);
+                builder2.setTitle("Add Highscore")
+                        .setMessage("Score: " + mScore + "\n" + "Name:");
+                // Get the layout inflater
+                LayoutInflater inflater = Map.this.getLayoutInflater();
+
+                // Inflate and set the layout for the dialog
+                // Pass null as the parent view because its going in the dialog layout
+                builder2.setView(inflater.inflate(R.layout.high_score, null))
+                        // Add action buttons
+                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // sign in the user ...
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent i = new Intent(Map.this, MainActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+                AlertDialog alertDialog2 = builder2.create();
+
+                alertDialog2.show();
+            }
+        });
+        builder.setNegativeButton("Home", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                Intent i = new Intent(Map.this, MainActivity.class);
+                startActivity(i);
+                finish();
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
 
     }
 
@@ -263,6 +282,50 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 //createGeofences();
 
                 showRiddle(0);
+
+                //Declare the timer
+              /*  Timer t = new Timer();
+                //Set the schedule function and rate
+                t.scheduleAtFixedRate(new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                TextView tv = (TextView) findViewById(R.id.timeView);
+                                tv.setText(String.valueOf(mMapMinutes) + ":" + String.valueOf(mMapSeconds));
+                                mMapSeconds -= 1;
+
+                                if(mMapSeconds == 0 && mMapMinutes <= 0)
+                                {
+                                    showGameFinishAlert();
+
+                                }
+                                if (mMapSeconds == 0) {
+                                    tv.setText(String.valueOf(mMapMinutes) + ":" + String.valueOf(mMapSeconds));
+
+                                    mMapSeconds = 60;
+                                    mMapMinutes = mMapMinutes - 1;
+                                }
+
+                            }
+                        });
+                    }
+                }, 0, 1000);*/
+
+                CountDownTimer t1 = new CountDownTimer(mMapMinutes*60000, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                        mTimeLeftView.setText("" +new SimpleDateFormat("mm:ss:SS").format(new Date( millisUntilFinished)));
+                    }
+
+                    public void onFinish() {
+                        mTimeLeftView.setText("0:00!");
+                        showGameFinishAlert();
+                    }
+                }.start();
             }
 
             @Override
