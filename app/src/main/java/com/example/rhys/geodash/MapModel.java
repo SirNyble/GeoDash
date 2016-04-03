@@ -11,6 +11,11 @@ public class MapModel {
     private int timeLimit;
     private int numRiddles;
 
+    public MapModel()
+    {
+
+    }
+
     public MapModel(String name, int timeLimitIn, int numRiddlesIn)
     {
         mapName = name;
@@ -46,5 +51,10 @@ public class MapModel {
     public int getNumRiddles()
     {
         return numRiddles;
+    }
+
+    public String toString()
+    {
+        return "MapName: " + mapName + ", numRiddles: " + numRiddles + ", timeLimit: " + timeLimit + ", RiddleLocation: " + riddleLocation.toString();
     }
 }

@@ -15,7 +15,7 @@
         android:background="@color/toolbar"
         android:elevation="4dp"
         android:titleTextColor="#FFFFFF"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:theme="@style/ToolBarStyle"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <LinearLayout
@@ -45,6 +45,14 @@
             android:layout_height="120dp"
             android:text="Random Map"
             android:id="@+id/randomBtn"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@mipmap/play"/>
+
+        <Button
+            android:layout_width="164dp"
+            android:layout_height="120dp"
+            android:text="High Scores"
+            android:id="@+id/high"
             android:layout_gravity="center_horizontal"
             android:drawableLeft="@mipmap/play"/>
     </LinearLayout>

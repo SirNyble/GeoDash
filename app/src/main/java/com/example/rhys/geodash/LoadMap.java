@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,6 +43,8 @@ public class LoadMap extends AppCompatActivity {
     private Button backBtn;
     private static final String[] ITEM_NUM_COLS = { DBHelper.NAME, DBHelper.CITY, DBHelper.TIMELIMIT, DBHelper.PRIVATE };
     private RecyclerView mRecyclerView;
+    private Firebase myFirebaseRef;
+    private ArrayList<MapModel> mModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,41 @@ public class LoadMap extends AppCompatActivity {
         // Enable the Up button
         ab.setDisplayHomeAsUpEnabled(true);
 
+        mModel = new ArrayList<MapModel>();
+
+        // Get a reference to the RecyclerView and configure it
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        // Setup Firebase
+        Firebase.setAndroidContext(this);
+        myFirebaseRef = new Firebase("https://burning-inferno-6101.firebaseio.com/");
+        myFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // do some stuff once
+
+                Log.d("Blah", "SNAPSHOT: " + snapshot.child("Maps").getValue());
+
+                //String riddleLocations = snapshot.child("Fredericton").child("Location").getValue().toString();
+                Log.d("Blah", "CHILDREN COUNT: " + snapshot.child("Maps").getChildrenCount());
+                //myFirebaseRef.child("Maps").child(mModel.getMapName());
+                int mapCount = (int) snapshot.child("Maps").getChildrenCount();
+                for (int i = 0; i < mapCount; i++) {
+                    //Log.d("important", postSnapshot.toString());
+                    MapModel post = snapshot.child("Maps").child("" + i).getValue(MapModel.class);
+                    Log.d("Blah", "MUAHA" + post.toString());
+                    mModel.add(post);
+                }
+                LoadDataTask task = new LoadDataTask();
+                task.execute(mModel);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
 
         contBtn = (Button) findViewById(R.id.contBtn);
         contBtn.setOnClickListener(new View.OnClickListener() {
@@ -63,13 +105,9 @@ public class LoadMap extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        // Get a reference to the RecyclerView and configure it
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
 
-        LoadDataTask task = new LoadDataTask();
-        task.execute();
+
+
 
     }
 
@@ -148,22 +186,32 @@ public class LoadMap extends AppCompatActivity {
         }
     }
 
-    public class LoadDataTask extends AsyncTask<Void, Void, ArrayList<MapModel>> {
-        private ArrayList<MapModel> entryList;
+    public class LoadDataTask extends AsyncTask<ArrayList<MapModel>, Void, ArrayList<MapModel>> {
+        private ArrayList<MapModel> mapList = new ArrayList<MapModel>();
 
-        protected ArrayList<MapModel> doInBackground(Void... params) {
+       /* protected ArrayList<MapModel> doInBackground(Void... params) {
             // TODO Use DataModel to load the data from the JSON assets file
             // and return the ArrayList of DictionaryEntrys
             //DataModel model = new DataModel(getApplicationContext());
             // recycler view correct?entryList = model.getEntries();
 
-            return entryList;
+
+            Log.d("Blah", "map: " + mapList.toString());
+            return mapList;
+        }*/
+
+        @Override
+        protected ArrayList<MapModel> doInBackground(ArrayList<MapModel>... params) {
+            mapList = params[0];
+            return mapList;
         }
 
         protected void onPostExecute(ArrayList<MapModel> result) {
             // TODO Use result to set the adapter for the RecyclerView in MainActivity
+            Log.d("HELP", result.toString());
+            result.toString();
             ArrayList<MapModel> temp = new ArrayList<MapModel>();
-            RecyclerView.Adapter mAdapter = new MyAdapter(temp);
+            RecyclerView.Adapter mAdapter = new MyAdapter(result);
             mRecyclerView.setAdapter(mAdapter);
 
 

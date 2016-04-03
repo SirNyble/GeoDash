@@ -17,7 +17,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -134,9 +137,29 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
                 //Check if done adding riddles
                 if(mCurrentRiddle == mNumRiddles)
                 {
+                    myFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            // do some stuff once
 
-                    Firebase mapRef = myFirebaseRef.child("Maps").child(mModel.getMapName());
-                    mapRef.setValue(mModel);
+                            Log.d("Blah", "SNAPSHOT: " + snapshot.child("Maps").getValue());
+
+                            //String riddleLocations = snapshot.child("Fredericton").child("Location").getValue().toString();
+                            Log.d("Blah", "CHILDREN COUNT: " + snapshot.child("Maps").getChildrenCount());
+                            //myFirebaseRef.child("Maps").child(mModel.getMapName());
+                            int mapCount = (int) snapshot.child("Maps").getChildrenCount();
+                            Firebase mapRef = myFirebaseRef.child("Maps").child("" + (mapCount));
+                            mapRef.setValue(mModel);
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+
+                   // Firebase mapRef = myFirebaseRef.child("Maps").child(mModel.getMapName());
+                    //mapRef.setValue(mModel);
 
                    // Log.d("DONE", "Finished adding riddles NOw add to firebase");
                    // Toast toast1 = Toast.makeText(context, "Successfully Added Map!", duration);
