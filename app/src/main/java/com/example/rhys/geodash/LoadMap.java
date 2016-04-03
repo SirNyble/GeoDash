@@ -31,17 +31,7 @@ import java.util.ArrayList;
  */
 public class LoadMap extends AppCompatActivity {
 
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
-
-    private LocationRequest mLocationRequest;
-
-    private DBHelper dbHelper;
-    private ListView holderList;
     private Button contBtn;
-    private Button backBtn;
-    private static final String[] ITEM_NUM_COLS = { DBHelper.NAME, DBHelper.CITY, DBHelper.TIMELIMIT, DBHelper.PRIVATE };
     private RecyclerView mRecyclerView;
     private Firebase myFirebaseRef;
     private ArrayList<MapModel> mModel;
@@ -98,9 +88,6 @@ public class LoadMap extends AppCompatActivity {
             }
         });
 
-
-
-
     }
 
 
@@ -115,7 +102,7 @@ public class LoadMap extends AppCompatActivity {
 
     }
 
-    //TODO - Complete the RecyclerView Adapter
+
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private ArrayList<MapModel> set;
 
@@ -143,19 +130,9 @@ public class LoadMap extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
-            // TODO Get the DictionaryEntry at index position in mDataSet
-            // You might need to declare this variable as final.
             final MapModel entry = set.get(position);
 
-
-            // TODO Set the TextView in the ViewHolder (holder) to be the
-            // word in this DictionaryEntry
             holder.mTextView.setText(entry.getMapName());
-
-            // TODO Set the onClickListener for the TextView in the ViewHolder (holder) such
-            // that when it is clicked, it creates an explicit intent to launch DetailActivity
-            // HINT: You will need to put two extra pieces of information in this intent,
-            // the word, and its definition
 
             holder.mTextView.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -171,7 +148,6 @@ public class LoadMap extends AppCompatActivity {
                 }
             });
 
-
         }
 
         @Override
@@ -183,33 +159,15 @@ public class LoadMap extends AppCompatActivity {
     public class LoadDataTask extends AsyncTask<ArrayList<MapModel>, Void, ArrayList<MapModel>> {
         private ArrayList<MapModel> mapList = new ArrayList<MapModel>();
 
-       /* protected ArrayList<MapModel> doInBackground(Void... params) {
-            // TODO Use DataModel to load the data from the JSON assets file
-            // and return the ArrayList of DictionaryEntrys
-            //DataModel model = new DataModel(getApplicationContext());
-            // recycler view correct?entryList = model.getEntries();
-
-
-            Log.d("Blah", "map: " + mapList.toString());
-            return mapList;
-        }*/
-
         @Override
         protected ArrayList<MapModel> doInBackground(ArrayList<MapModel>... params) {
             mapList = params[0];
-            for(int i = 0; i < params.length; i++)
-                Log.d("PARAMS", params[i].toString());
-            Log.d("MAYBE", mapList.toString() );
             return mapList;
         }
 
         protected void onPostExecute(ArrayList<MapModel> result) {
-            // TODO Use result to set the adapter for the RecyclerView in MainActivity
-            Log.d("HELP", result.toString());
             RecyclerView.Adapter mAdapter = new MyAdapter(result);
             mRecyclerView.setAdapter(mAdapter);
-
-
         }
     }
 

@@ -43,10 +43,8 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener{
 
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
-    private static final String TAG = "DEBUG: ";// MainActivity.class.getSimpleName();
     private LocationRequest mLocationRequest;
     private boolean mIsFirstUpdate;
 
@@ -141,12 +139,6 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
                             // do some stuff once
-
-                            Log.d("Blah", "SNAPSHOT: " + snapshot.child("Maps").getValue());
-
-                            //String riddleLocations = snapshot.child("Fredericton").child("Location").getValue().toString();
-                            Log.d("Blah", "CHILDREN COUNT: " + snapshot.child("Maps").getChildrenCount());
-                            //myFirebaseRef.child("Maps").child(mModel.getMapName());
                             int mapCount = (int) snapshot.child("Maps").getChildrenCount();
                             Firebase mapRef = myFirebaseRef.child("Maps").child("" + (mapCount));
                             mapRef.setValue(mModel);
@@ -158,28 +150,8 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
                         }
                     });
 
-                   // Firebase mapRef = myFirebaseRef.child("Maps").child(mModel.getMapName());
-                    //mapRef.setValue(mModel);
-
-                   // Log.d("DONE", "Finished adding riddles NOw add to firebase");
-                   // Toast toast1 = Toast.makeText(context, "Successfully Added Map!", duration);
-                   // toast1.show();
-                    Log.d("BLH", "AHL");
                     Intent i = new Intent(CreateMapCont.this, MainActivity.class);
                     startActivity(i);
-                    Log.d("BLH", "AHL2");
-                    //Firebase alanRef = ref.child("users").child("alanisawesome");
-                    //User alan = new User("Alan Turing", 1912);
-                    //alanRef.setValue(alan);
-                    //Firebase cityRef = myFirebaseRef.child("Fredericton").child("Location");
-
-                    /*HashMap<String, Object> riddle = new HashMap<String, Object>();
-                    riddle.put("Latitude", "45.946777");
-                    riddle.put("Longitude","-66.676234");
-                    riddle.put("Riddle Name", "Home");
-                    riddle.put("Riddle Message", "After a long day, You'll find me lounging at...");
-                    cityRef.setValue(riddle);*/
-
                 }
                 else
                 {
@@ -206,7 +178,7 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
         // Create the LocationRequest object
         mLocationRequest=new
 
-        LocationRequest();//LocationRequest.create()
+        LocationRequest();
 
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(10*1000);      // 10 seconds, in milliseconds
@@ -253,11 +225,7 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
 
-        //mLatitudeText.setText(String.valueOf(currentLatitude));
-        // mLongitudeText.setText(String.valueOf(currentLongitude));
-
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-       // mCurLocation.setPosition(latLng);
 
         if(mIsFirstUpdate)
         {
@@ -275,9 +243,7 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "MAP READY");
         mMap = googleMap;
-        //mCurLocation = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)).title("I am here!"));
         CameraUpdate zoom= CameraUpdateFactory.zoomTo(17);
         mMap.animateCamera(zoom);
 
@@ -285,7 +251,6 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
 
             @Override
             public void onMapClick(LatLng arg0) {
-                // TODO Auto-generated method stub
                 if(mCurLocation == null)
                 {
                     mCurLocation = mMap.addMarker(new MarkerOptions().position(arg0).title("Riddle: " + mCurrentRiddle + " location!"));
@@ -294,7 +259,6 @@ public class CreateMapCont extends AppCompatActivity implements OnMapReadyCallba
                 {
                     mCurLocation.setPosition(arg0);
                 }
-                Log.d("arg0", arg0.latitude + "-" + arg0.longitude);
             }
         });
     }
