@@ -47,14 +47,6 @@
             android:id="@+id/randomBtn"
             android:layout_gravity="center_horizontal"
             android:drawableLeft="@mipmap/play"/>
-
-        <Button
-            android:layout_width="164dp"
-            android:layout_height="120dp"
-            android:text="High Scores"
-            android:id="@+id/high"
-            android:layout_gravity="center_horizontal"
-            android:drawableLeft="@mipmap/play"/>
     </LinearLayout>
 
 </LinearLayout>

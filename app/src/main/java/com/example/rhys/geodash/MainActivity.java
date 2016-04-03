@@ -53,25 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final Button high = (Button) findViewById(R.id.high);
-        high.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String user = "User's Name: ";
-                String map = "Map Title";
-                String score = "666";
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.setTitle("High Scores");
-                alertDialog.setMessage(map + " - " + user + score);
 
-                alertDialog.setButton("Exit", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // here you can add functions
-                    }
-                });
-
-                alertDialog.show();
-            }
-        });
 
     }
 

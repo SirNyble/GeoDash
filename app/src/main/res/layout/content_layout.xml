@@ -15,6 +15,78 @@
         android:theme="@style/ToolBarStyle"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Map Details:"
+        android:id="@+id/textView"
+        android:textSize="48px" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/timeTXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:layout_alignParentTop="true"
+            android:text="Time Limit: "
+            android:textStyle="bold"></TextView>
+        <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/numRiddles"
+        android:layout_toLeftOf="@+id/numRiddles"></TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/riddleTXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:layout_alignParentTop="true"
+            android:text="Number of Riddles: "
+            android:textStyle="bold"></TextView>
+        <TextView
+            android:id="@+id/numRiddles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
+        </TextView>
+    </LinearLayout>
+
+
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="High Scores"
+        android:id="@+id/high"
+        android:layout_gravity="center_horizontal"/>
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PLAY MAP!"
+        android:id="@+id/playBtn" />
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
@@ -25,31 +97,4 @@
         android:layout_alignParentLeft="true"
         android:layout_toStartOf="@+id/time"
         android:layout_toLeftOf="@+id/time"/>
-
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_vertical_margin"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/numRiddles"
-        android:layout_toLeftOf="@+id/numRiddles">
-    </TextView>
-    <TextView
-        android:id="@+id/numRiddles"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_vertical_margin"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true">
-    </TextView>
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Play Map!"
-        android:id="@+id/playBtn" />
 </LinearLayout>
