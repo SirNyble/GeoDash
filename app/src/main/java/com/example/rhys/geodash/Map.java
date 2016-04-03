@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -196,12 +197,47 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 builder2.setTitle("Add Highscore")
                         .setMessage("Score: " + mScore + "\n" + "Name:");
                 LayoutInflater inflater = Map.this.getLayoutInflater();
-                builder2.setView(inflater.inflate(R.layout.high_score, null))
+                View v_iew=inflater.inflate(R.layout.high_score, null) ;
+                final EditText uNameText = (EditText) v_iew.findViewById(R.id.usernameScore);
+                builder2.setView(v_iew)
 
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int id) {
+                            public void onClick(DialogInterface dialog2, int id) {
+
                                 // sign in the user ...
+                                myFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        // do some stuff once
+
+                                        Log.d("Blah", "SNAPSHOT: " + snapshot.child("Users").getValue());
+
+                                        //String riddleLocations = snapshot.child("Fredericton").child("Location").getValue().toString();
+                                        Log.d("Blah", "CHILDREN COUNT: " + snapshot.child("Users").getChildrenCount());
+                                        //myFirebaseRef.child("Maps").child(mModel.getMapName());
+
+
+                                        String usrName = uNameText.getText().toString();
+                                        int usrCount = (int) snapshot.child("Scores").child("Maps").child("" + (mMapId)).getChildrenCount();
+                                        Firebase mapRef = myFirebaseRef.child("Scores").child("Maps").child("" + (mMapId)).child(usrName);
+                                        User oldUser = snapshot.child("Scores").child("Maps").child("" + (mMapId)).child(usrName).getValue(User.class);
+
+                                        User usr = new User(usrName, mScore);
+                                        if(oldUser == null || oldUser.getScore() < usr.getScore())
+                                            mapRef.setValue(usr);
+
+                                        /*Firebase alanRef = myFirebaseRef.child("users").child("alanisawesome");
+
+                                        alanRef.setValue(alan);*/
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {
+
+                                    }
+                                });
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
