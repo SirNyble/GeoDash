@@ -59,8 +59,8 @@ import static android.location.Location.distanceBetween;
 public class Map extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener,
-        ResultCallback {
+        LocationListener
+{
     private int mMapId;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private GoogleMap mMap;
@@ -74,11 +74,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
     private Button mGuessButton = null;
     private Button mRiddleButton = null;
     private boolean mIsFirstUpdate = true;
-
-    //private TextView mLongitudeText;
-
-    private List<Geofence> mGeofenceList;
-    private PendingIntent mGeofencePendingIntent;
 
     private Firebase myFirebaseRef;
 
@@ -115,28 +110,12 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         mapFragment.getMapAsync(this);
         mScore = 0;
         mRound = 0;
-
-        mGeofenceList = new ArrayList<Geofence>();
         mRiddleLocations = new ArrayList<RiddleLocation>();
-        mGeofencePendingIntent = null;
 
         // Setup Firebase
         Firebase.setAndroidContext(this);
         myFirebaseRef = new Firebase("https://burning-inferno-6101.firebaseio.com/");
 
-
-
-        //Firebase cityRef = myFirebaseRef.child("Fredericton").child("Location");
-
-        /*HashMap<String, Object> riddle = new HashMap<String, Object>();
-        riddle.put("Latitude", "45.946777");
-        riddle.put("Longitude","-66.676234");
-        riddle.put("Riddle Name", "Home");
-        riddle.put("Riddle Message", "After a long day, You'll find me lounging at...");
-        cityRef.setValue(riddle);*/
-
-        //mLatitudeText = (TextView) findViewById(R.id.latTextView);
-        //mLongitudeText = (TextView) findViewById(R.id.longTextView);
         mScoreText = (TextView) findViewById(R.id.scoreText);
 
         //setup google api
@@ -236,44 +215,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         });
         mGuessButton.setEnabled(false);
 
-        /*final Button bckButton = (Button) findViewById(R.id.backBtn);
-        bckButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(Map.this, MainActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });*/
-
-
-
-        /*final Button addGeofenceButton = (Button) findViewById(R.id.addGeofenceBtn);
-        addGeofenceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Create Geofences
-               // Log.d(TAG, mLatitudeText.toString() + mLongitudeText.toString());
-                mGeofenceList.add(new Geofence.Builder()
-                        .setRequestId("0").setCircularRegion(
-                       //Double.parseDouble(mLatitudeText.getText().toString()),
-                       // Double.parseDouble(mLongitudeText.getText().toString()),
-                                45.946777, -66.676234,
-                                20
-                        )
-                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                                Geofence.GEOFENCE_TRANSITION_EXIT |
-                                Geofence.GEOFENCE_TRANSITION_DWELL)
-                        .setLoiteringDelay(4900)
-                        .build());
-                startLocationUpdates();
-            }
-        });*/
-
-
-        //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=business+near+city");
-        //startActivity(intent);
-        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&types=food&name=cruise&key=YOUR_API_KEY
     }
 
     private void loadRiddleLocations()
@@ -304,88 +245,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
-    }
-
-
-    /*private void loadRiddleLocations()
-    {
-        //Query queryRef = myFirebaseRef.orderByKey();
-        String locations = "";
-        //snapshot.getChildrenCount();
-        myFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                // do some stuff once
-
-                Log.e(TAG, "SNAPSHOT: " + snapshot.child("Fredericton").getValue());
-
-                //String riddleLocations = snapshot.child("Fredericton").child("Location").getValue().toString();
-                Log.d(TAG, "CHILDREN COUNT: " + snapshot.child("Fredericton").child("Location").getChildrenCount());
-                int locationCount = (int) snapshot.child("Fredericton").child("Location").getChildrenCount();
-                for (int i = 1; i <= locationCount; i++) {
-                    RiddleLocation curLocation = new RiddleLocation();
-                    DataSnapshot riddleLocations = snapshot.child("Fredericton").child("Location").child(Integer.toString(i));
-                    curLocation.setName(riddleLocations.child("Name").getValue().toString());
-                    curLocation.setRiddle(riddleLocations.child("Riddle").getValue().toString());
-                    curLocation.setLatitude(Double.parseDouble(riddleLocations.child("Latitude").getValue().toString()));
-                    curLocation.setLongitude(Double.parseDouble(riddleLocations.child("Longitude").getValue().toString()));
-                    Log.d(TAG, "YAYY: " + curLocation.toString());
-                    mRiddleLocations.add(curLocation);
-                }
-                Log.d(TAG, "LOCATION COUNT: " + mRiddleLocations.size());
-                //createGeofences();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-            }
-        });
-    }*/
-
-    private void createGeofences()
-    {
-        Log.d(TAG, "LOCATION SIZE: " + mRiddleLocations.size());
-        for(int i = 0; i < mRiddleLocations.size(); i++)
-        {
-            mGeofenceList.add(new Geofence.Builder()
-                    .setRequestId(Integer.toString(i)).setCircularRegion(
-                       /* Double.parseDouble(mLatitudeText.getText().toString()),
-                        Double.parseDouble(mLongitudeText.getText().toString()),*/
-                            mRiddleLocations.get(i).getLatitude(),
-                            mRiddleLocations.get(i).getLongitude(),
-                            25
-                    )
-                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                            Geofence.GEOFENCE_TRANSITION_EXIT |
-                            Geofence.GEOFENCE_TRANSITION_DWELL)
-                    .setLoiteringDelay(4900)
-                    .build());
-        }
-        startLocationUpdates();
-    }
-
-    private GeofencingRequest getGeofencingRequest() {
-        for(int i= 0; i < mGeofenceList.size(); i++)
-        {
-            Log.d(TAG, "GEOFENCE LIST: " + mGeofenceList.get(i));
-        }
-
-        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-        builder.addGeofences(mGeofenceList);
-        return builder.build();
-    }
-
-    private PendingIntent getGeofencePendingIntent() {
-        // Reuse the PendingIntent if we already have it.
-        if (mGeofencePendingIntent != null) {
-            return mGeofencePendingIntent;
-        }
-        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
-        // calling addGeofences() and removeGeofences().
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
@@ -434,13 +293,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         startLocationUpdates();
         mRiddleButton.setEnabled(true);
         mGuessButton.setEnabled(true);
-        //Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-       /* if (location == null) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-        else {
-            handleNewLocation(location);
-        };*/
     }
 
     protected void startLocationUpdates() {
@@ -455,18 +307,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        //Log.d(TAG, "TOOO LTE");
-        if(mGeofenceList.size() > 0)
-        {
-            Log.d(TAG, "ADDING GEOFENCES");
-            LocationServices.GeofencingApi.addGeofences(
-                    mGoogleApiClient,
-                    getGeofencingRequest(),
-                    getGeofencePendingIntent()
-            ).setResultCallback(this);
-        }
-
-        //finish();
     }
 
     @Override
@@ -494,9 +334,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
 
-        //mLatitudeText.setText(String.valueOf(currentLatitude));
-       // mLongitudeText.setText(String.valueOf(currentLongitude));
-
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
         mCurLocation.setPosition(latLng);
 
@@ -518,41 +355,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     private void updateUI(double lat, double lon) {
-        //mScore++;
         mScoreText.setText("" + mScore);
-        //mLatitudeText.setText(String.valueOf(lat));
-        //mLongitudeText.setText(String.valueOf(lon));
-        //mLastUpdateTimeTextView.setText(mLastUpdateTime);
     }
 
-    @Override
-    public void onResult(Result result) {
-        Log.d(TAG, "ON RESULT Blah");
-        Log.d(TAG, "REsults: " + result.toString());
-
-        CircleOptions fenceOptions = new CircleOptions()
-                .strokeColor(Color.BLACK) //Outer black border
-                .fillColor(0x88ff0000) //inside of the geofence will be transparent, change to whatever color you prefer like 0x88ff0000 for mid-transparent red
-                .center(new LatLng(45.946777, -66.676234)) // the LatLng Object of your geofence location
-                .radius(20); // The radius (in meters) of your geofence
-        mMap.addCircle(fenceOptions);
-    }
-
-    private double calculateDistance(double fromLong, double fromLat,
-                                     double toLong, double toLat) {
-        double d2r = Math.PI / 180;
-        double dLong = (toLong - fromLong) * d2r;
-        double dLat = (toLat - fromLat) * d2r;
-        double a = Math.pow(Math.sin(dLat / 2.0), 2) + Math.cos(fromLat * d2r)
-                * Math.cos(toLat * d2r) * Math.pow(Math.sin(dLong / 2.0), 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double d = 6367000 * c;
-        return Math.round(d);
-    }
-    /*
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.e(TAG, "UPDATING");
-        handleNewLocation(location);
-    }*/
 }
