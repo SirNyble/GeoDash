@@ -137,19 +137,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         mRiddleButton = (Button) findViewById(R.id.riddleButton);
         mRiddleButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String riddleMsg = mRiddleLocations.get(mRound).getRiddle();
-                String riddleTitle = mRiddleLocations.get(mRound).getName();
-                AlertDialog alertDialog = new AlertDialog.Builder(Map.this).create();
-                alertDialog.setTitle(riddleTitle);
-                alertDialog.setMessage(riddleMsg);
-
-                alertDialog.setButton("Continue..", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // here you can add functions
-                    }
-                });
-
-                alertDialog.show();
+                showRiddle(mRound);
             }
         });
         mRiddleButton.setEnabled(false);
@@ -167,7 +155,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
 
                 float[] results = new float[1];
                 distanceBetween(curLat, curLong, actLat, actLong, results);
-                mScore += (int)(1000 - results[0]);
+                int tmpScore = (int)(1000 - results[0]);
+                mScore += tmpScore >= 0 ? tmpScore : 0;
+
                 Log.d(TAG, "DISTANCE: " + results[0] + " meters");
                 Polyline line = mMap.addPolyline(new PolylineOptions()
                         .add(new LatLng(curLat, curLong), new LatLng(actLat, actLong))
@@ -224,9 +214,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                     builder.setNegativeButton("Home", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
 
-                                Intent i = new Intent(Map.this, MainActivity.class);
-                                startActivity(i);
-                                finish();
+                            Intent i = new Intent(Map.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
 
                         }
                     });
@@ -237,6 +227,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
 
 
 
+                }
+                else
+                {
+                    showRiddle(mRound);
                 }
 
             }
@@ -267,6 +261,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 }
                 Log.d(TAG, "LOCATION COUNT: " + mRiddleLocations.size());
                 //createGeofences();
+
+                showRiddle(0);
             }
 
             @Override
@@ -275,6 +271,22 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         });
     }
 
+    public void showRiddle(int riddleIndex)
+    {
+        String riddleMsg = mRiddleLocations.get(riddleIndex).getRiddle();
+        String riddleTitle = mRiddleLocations.get(riddleIndex).getName();
+        AlertDialog alertDialog = new AlertDialog.Builder(Map.this).create();
+        alertDialog.setTitle(riddleTitle);
+        alertDialog.setMessage(riddleMsg);
+
+        alertDialog.setButton("Continue..", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // here you can add functions
+            }
+        });
+
+        alertDialog.show();
+    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -293,6 +305,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         mMap.animateCamera(zoom);
 
         loadRiddleLocations();
+
+
 
     }
 

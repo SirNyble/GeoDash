@@ -2,6 +2,7 @@ package com.example.rhys.geodash;
 
 import android.app.ActionBar;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -80,6 +82,14 @@ public class CreateMap extends AppCompatActivity {
                         createMapCont.putExtra("timeLimit", Integer.parseInt(mTimeLimitView.getText().toString()));
                         createMapCont.putExtra("numRiddles", Integer.parseInt(mNumRiddlesView.getText().toString()));
                         startActivity(createMapCont);
+                    }
+                    else
+                    {
+                        Context context = getApplicationContext();
+                        CharSequence text = "Error: Make sure all fields are filled out!";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
                 }
             });
