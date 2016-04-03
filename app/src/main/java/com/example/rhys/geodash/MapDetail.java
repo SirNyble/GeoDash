@@ -7,9 +7,18 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
+
+import java.util.ArrayList;
 
 /**
  * Created by Kelsey on 4/2/2016.
@@ -27,6 +36,8 @@ public class MapDetail extends AppCompatActivity {
     private int mPos = 0;
 
     private Button mPlayBtn;
+    private Firebase myFirebaseRef;
+    private ArrayList<User> mUserModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,12 @@ public class MapDetail extends AppCompatActivity {
             }
         });
 
+        // Setup Firebase
+        Firebase.setAndroidContext(this);
+        myFirebaseRef = new Firebase("https://burning-inferno-6101.firebaseio.com/");
+        Query queryRef = myFirebaseRef.orderByChild("score");
+        mUserModel = new ArrayList<User>();
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         ActionBar bar = getSupportActionBar();
@@ -69,12 +86,17 @@ public class MapDetail extends AppCompatActivity {
         final Button high = (Button) findViewById(R.id.high);
         high.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String user = "User's Name: ";
-                String map = "Map Title";
-                String score = "666";
+                String msg = "";
+                for(int i = 0; i < mUserModel.size(); i++)
+                {
+                    String user = mUserModel.get(i).getName();
+                    long score = mUserModel.get(i).getScore();
+                    msg +=  " - " + user + ": " + score + "\n";
+                }
+
                 AlertDialog alertDialog = new AlertDialog.Builder(MapDetail.this).create();
                 alertDialog.setTitle("High Scores");
-                alertDialog.setMessage(map + " - " + user + score);
+                alertDialog.setMessage(msg);
 
                 alertDialog.setButton("Exit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -85,5 +107,26 @@ public class MapDetail extends AppCompatActivity {
             }
         });
 
+
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // do some stuff once
+                //myFirebaseRef.child("Scores").child("Maps").child("" + (mMapId)).child("Users").child("" + usrCount);
+                //User oldUser = snapshot.child("Scores").child("Maps").child("" + (mMapId)).child("Users").child("" + usrCount).getValue(User.class);
+                int usrCount = (int) snapshot.child("Scores").child("Maps").child("" + (mPos)).child("Users").getChildrenCount();
+                for (int i = 0; i < usrCount; i++) {
+                    User post = snapshot.child("Scores").child("Maps").child("" + (mPos)).child("Users").child("" + i).getValue(User.class);
+                    Log.d("HALP", post.toString());
+                    mUserModel.add(post);
+                }
+                Log.d("HALP", mUserModel.toString());
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
     }
 }

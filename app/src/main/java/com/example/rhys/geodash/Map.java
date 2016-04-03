@@ -219,9 +219,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
 
 
                                         String usrName = uNameText.getText().toString();
-                                        int usrCount = (int) snapshot.child("Scores").child("Maps").child("" + (mMapId)).getChildrenCount();
-                                        Firebase mapRef = myFirebaseRef.child("Scores").child("Maps").child("" + (mMapId)).child(usrName);
-                                        User oldUser = snapshot.child("Scores").child("Maps").child("" + (mMapId)).child(usrName).getValue(User.class);
+                                        int usrCount = (int) snapshot.child("Scores").child("Maps").child("" + (mMapId)).child("Users").getChildrenCount();
+                                        Firebase mapRef = myFirebaseRef.child("Scores").child("Maps").child("" + (mMapId)).child("Users").child("" + usrCount);
+                                        User oldUser = snapshot.child("Scores").child("Maps").child("" + (mMapId)).child("Users").child("" + usrCount).getValue(User.class);
 
                                         User usr = new User(usrName, mScore);
                                         if(oldUser == null || oldUser.getScore() < usr.getScore())

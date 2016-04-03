@@ -17,5 +17,10 @@ public class User {
     public String getName() {
         return name;
     }
+
+    public String toString()
+    {
+        return "Name: " + name + ", Score: " + score;
+    }
 }
 
