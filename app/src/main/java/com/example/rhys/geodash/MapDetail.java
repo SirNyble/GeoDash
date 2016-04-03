@@ -81,7 +81,6 @@ public class MapDetail extends AppCompatActivity {
                         // here you can add functions
                     }
                 });
-
                 alertDialog.show();
             }
         });
