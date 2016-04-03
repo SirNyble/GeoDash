@@ -46,4 +46,10 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true">
     </TextView>
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Play Map!"
+        android:id="@+id/playBtn" />
 </LinearLayout>
