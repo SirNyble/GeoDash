@@ -54,6 +54,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.rhys.geodash.MainActivity" />
         </activity>
+        <activity android:name=".MapDetail"
+            android:parentActivityName="com.example.rhys.geodash.LoadMap">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.rhys.geodash.LoadMap" />
+        </activity>
     </application>
 
 </manifest>
