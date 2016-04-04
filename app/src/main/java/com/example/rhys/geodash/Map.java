@@ -317,7 +317,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 CountDownTimer t1 = new CountDownTimer(mMapMinutes*60000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
-                        mTimeLeftView.setText("" +new SimpleDateFormat("mm:ss:SS").format(new Date( millisUntilFinished)));
+                        mTimeLeftView.setText("" +new SimpleDateFormat("mm:ss").format(new Date( millisUntilFinished)));
                     }
 
                     public void onFinish() {
