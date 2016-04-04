@@ -2,8 +2,13 @@ package com.example.rhys.geodash;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -116,18 +121,19 @@ public class LoadMap extends AppCompatActivity {
 
             public TextView mTextView;
 
-            public ViewHolder(TextView v) {
+            public ViewHolder(View v) {
                 super(v);
-                mTextView = v;
+                mTextView = (TextView) v.findViewById(R.id.item_textview);
             }
         }
 
         @Override
         public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                        int viewType) {
-            TextView v = (TextView) LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.map_layout, parent, false);
-            return new ViewHolder(v);
+            View v =  LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.map_layout, null);
+            ViewHolder view = new ViewHolder(v);
+            return view;
         }
 
         @Override
@@ -172,7 +178,5 @@ public class LoadMap extends AppCompatActivity {
             mRecyclerView.setAdapter(mAdapter);
         }
     }
-
-
 }
 
